@@ -7,8 +7,12 @@ const AppContext = React.createContext()
 //we export appprovider and the custom hook at the bottom
 export const AppProvider = ({ children }) => {
   //we set up 2 useState and 4 function to open/close sidebar
-  const [isSideBarOpen, setIsSideBarOpen] = useState(true)
-  const [isSubmenuOpen, setIsSubmenuOpen] = useState(true)
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false)
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false)
+  //{7} we setup this to be an empty object so we can update dinamically with the coordinates from the mouseover
+  const [location, setLocation] = useState({})
+  //{8} we setup page to be an empty object
+  const [page, setPage] = useState({ page: '', links: [] })
 
   const openSideBar = () => {
     setIsSideBarOpen(true)
@@ -18,7 +22,12 @@ export const AppProvider = ({ children }) => {
     setIsSideBarOpen(false)
   }
 
-  const openSubmenu = () => {
+  //{7}this function need to look for the text  inside the btn and the coordinates so we can dinamically update the position of the submenu
+  const openSubmenu = (text, coordinates) => {
+    // {8} we populate object with find where the text inside the button it's equal to the page
+    const page = sublinks.find((link) => link.page === text)
+    setPage(page)
+    setLocation(coordinates)
     setIsSubmenuOpen(true)
   }
 
@@ -35,6 +44,8 @@ export const AppProvider = ({ children }) => {
         closeSubmenu,
         openSideBar,
         closeSideBar,
+        location,
+        page,
       }}
     >
       {children}
